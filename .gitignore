@@ -1,3 +1,4 @@
 !gitignore
 !user.db
 !venv
+!depecrated
