@@ -22,6 +22,6 @@ ENV PYTHONPATH=/src
 
 # Define the command to run your FastAPI server when the container starts
 # CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-# CMD ["fastapi", "run", "main.py", "--port", "8000"]
-CMD ["gunicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["fastapi", "run", "main.py", "--port", "8000"]
+# CMD ["gunicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 # CMD ["python3", "main.py"]

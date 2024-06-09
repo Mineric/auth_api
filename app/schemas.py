@@ -1,11 +1,37 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, validator, constr, Field
+import re
 
 class User(BaseModel):
-    user_id: str = Field(..., example="TaroYamada")
-    password: str = Field(..., example="PaSSwd4TY")
+    user_id: constr(min_length=6, max_length=20) = Field(..., example="TaroYamada")
+    password: constr(min_length=8, max_length=20) = Field(..., example="PaSSwd4TY")
+    nickname: str = Field(None, example="Taro")
+    comment: str = Field(None, example="I am happy!")
 
+class CreateUser(BaseModel):
+    user_id: constr(min_length=6, max_length=20) = Field(..., example="TaroYamada")
+    password: constr(min_length=8, max_length=20) = Field(..., example="PaSSwd4TY")
+
+    @validator('user_id')
+    def user_id_valid(cls, v):
+        if not re.match(r'^[a-zA-Z0-9]{6,20}$', v):
+            raise ValueError("user_id must be 6-20 halfwidth alphanumeric characters.")
+        return v
+
+    @validator('password')
+    def password_valid(cls, v):
+        if not re.match(r'^[\x21-\x7E]{8,20}$', v):  # \x21 to \x7E are printable ASCII characters excluding space
+            raise ValueError("password must be 8-20 ASCII characters without spaces or control characters.")
+        return v
+    
 class UpdateUser(BaseModel):
     nickname: str = Field(None, example="Taro")
+    comment: str = Field(None, example="I am happy!")
+
+class UpdateUserResponse(BaseModel):
+    message: str
+    recipe: list
+    # nickname: str = Field(None, example="Taro")
+    # comment: str = Field(None, example="I am happy!")
 
 class UserResponse(BaseModel):
     message: str
